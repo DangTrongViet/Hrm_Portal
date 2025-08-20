@@ -1,7 +1,17 @@
 // Auth
+export type User = {
+  id: number | string;
+  full_name: string;
+  email?: string | null;
+  status: 'active' | 'inactive';
+  roleId: number | string;
+  permissions: string[];
+};
+
+// LoginResp dùng User mới
 export type LoginResp = {
   tokenUser: string;
-  user: any;
+  user: User;
 };
 
 export type ApiMessage = {
