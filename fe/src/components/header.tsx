@@ -1,6 +1,6 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { postNoBody } from "../lib/http"; // ✅ dùng http helper để có credentials/include
-
+import '../../public/css/headers/header.css';
 // Kiểu dữ liệu
 type NavItem = { to: string; label: string; require?: string[] };
 
