@@ -270,3 +270,21 @@
     min-width: 150px;
   }
 }
+
+
+/* Ngăn ancestor cắt dropdown */
+.user .users-card,
+.user .hrm-table {
+  overflow: visible;            /* trước đây bạn để hidden */
+}
+
+/* Giữ scroll ngang cho mobile nhưng không cắt menu */
+.user .table-responsive {
+  overflow-x: auto;
+  overflow-y: visible;          /* quan trọng */
+}
+
+/* Đảm bảo cell cho phép menu bùng ra */
+.user .table-actions {
+  position: relative;           /* cho an toàn */
+}
