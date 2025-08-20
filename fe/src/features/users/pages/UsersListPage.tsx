@@ -209,7 +209,7 @@ export default function UsersListPage() {
   const toggleVerified = async (user: UserRow) => {
     try {
       setActingId(user.id);
-      await apiPatch(`/admin/users/${user.id}/verify`, { isVerified: !user.isVerified });
+      await apiPatch(`/users/${user.id}/verify`, { isVerified: !user.isVerified });
       setRows((prev) => prev.map((r) => (r.id === user.id ? { ...r, isVerified: !r.isVerified } : r)));
       notify('success', `Đã ${!user.isVerified ? 'xác minh' : 'bỏ xác minh'} #${user.id}`);
     } catch (e: any) {
@@ -222,7 +222,7 @@ export default function UsersListPage() {
   const resendInvite = async (user: UserRow) => {
     try {
       setActingId(user.id);
-      await apiPost(`/admin/users/${user.id}/resend-invite`, {});
+      await apiPost(`/users/${user.id}/resend-invite`, {});
       notify('success', `Đã gửi lại email mời cho ${user.email}`);
     } catch (e: any) {
       notify('danger', e?.message || 'Không gửi lại được email mời');
