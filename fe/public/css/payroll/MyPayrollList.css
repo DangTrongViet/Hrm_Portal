@@ -1,0 +1,93 @@
+/* MyPayrollList – polish nhẹ nhàng mà sang */
+
+/* Header gradient */
+.my-payroll-header {
+  background: linear-gradient(135deg, #6f42c1 0%, #20c997 100%);
+  color: #fff;
+  border-top-left-radius: 14px;
+  border-top-right-radius: 14px;
+}
+
+/* Card chung */
+.my-card {
+  border: 0;
+  border-radius: 14px;
+  box-shadow: 0 10px 24px rgba(18, 38, 63, 0.06);
+}
+
+/* Toolbar */
+.my-toolbar .btn {
+  border-radius: 12px;
+}
+.filter-chip {
+  border-radius: 999px;
+  background: #f8f9fc;
+  border: 1px solid #e3e6f0;
+  padding: 6px 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Table */
+.table thead th {
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.table-hover tbody tr:hover {
+  background-color: rgba(111, 66, 193, 0.06); /* tím pastel */
+}
+.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Empty state */
+.empty-wrap {
+  padding: 72px 16px;
+  text-align: center;
+  color: #6c757d;
+}
+
+/* Stats */
+.stat-card {
+  border-radius: 14px;
+  border: 1px dashed #e3e6f0;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(18, 38, 63, 0.08);
+}
+
+/* Compact inputs */
+.input-compact .form-control,
+.input-compact .form-select {
+  height: 40px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+/* Skeleton loader */
+.skeleton {
+  background: linear-gradient(90deg, #eee 25%, #f5f5f5 37%, #eee 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+  border-radius: 8px;
+  height: 16px;
+}
+@keyframes shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+.badge-soft {
+  background-color: rgba(111, 66, 193, 0.12);
+  color: #6f42c1;
+}

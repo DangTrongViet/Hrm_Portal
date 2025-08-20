@@ -1,0 +1,97 @@
+/* === RoleDetailPage polish (Bootstrap 5) === */
+
+.rp-card {
+  border: 0;
+  border-radius: 16px;
+  box-shadow: 0 12px 28px rgba(18, 38, 63, 0.08);
+}
+
+.rp-header {
+  background: linear-gradient(135deg, #4e73df 0%, #1cc88a 100%);
+  color: #fff;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #fff 0%, #e3f8ee 100%);
+  /* Fallback text color for browsers that don't support text clipping */
+  color: #e3f8ee; /* Matches the end gradient color for consistency */
+  /* Vendor prefix for WebKit browsers */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  /* Standard property (limited support for 'text' value) */
+  background-clip: text;
+  /* Ensure compatibility with older browsers */
+  display: inline-block; /* Ensures consistent rendering */
+}
+.rp-btn {
+  border-radius: 12px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.rp-chip {
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+  background: #eef4ff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  color: #2b4ed3;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.rp-form .form-control,
+.rp-form .form-select {
+  height: 44px;
+}
+
+.bg-light-subtle {
+  background: #f7f9fc !important;
+}
+
+.rp-perm-card {
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 12px;
+  transition: box-shadow 0.15s ease;
+}
+.rp-perm-card:hover {
+  box-shadow: 0 8px 20px rgba(18, 38, 63, 0.08);
+}
+
+.rp-perm-list {
+  max-height: 420px;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.rp-sticky-footer {
+  position: sticky;
+  bottom: 0;
+  background: #ffffffcc;
+  backdrop-filter: blur(6px);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 0.75rem 1rem;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+}
+
+.rp-search input {
+  padding-left: 2.2rem;
+  box-shadow: 0 2px 10px rgba(18, 38, 63, 0.06);
+}
+.rp-search .bi-search {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6c757d;
+}
+
+.rp-section-title {
+  font-weight: 700;
+  color: #334155;
+}
+
+.rp-muted {
+  color: #6c757d;
+}

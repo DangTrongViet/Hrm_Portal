@@ -1,0 +1,146 @@
+.leaveAdmin {
+  font-family: Arial, sans-serif;
+}
+
+.leaveAdmin .page-title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #222;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.leaveAdmin .loading-box,
+.leaveAdmin .error-box {
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.leaveAdmin .loading-box {
+  background: #f1f5f9;
+  color: #333;
+}
+
+.leaveAdmin .error-box {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.leaveAdmin .spinner {
+  border: 3px solid #16a34a;
+  border-top: 3px solid transparent;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.leaveAdmin .table-wrapper {
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.leaveAdmin .leave-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.leaveAdmin .leave-table th,
+.leaveAdmin .leave-table td {
+  border: 1px solid #ddd;
+  padding: 8px 10px;
+  text-align: left;
+}
+
+.leaveAdmin .leave-table th {
+  background: #f8fafc;
+  font-weight: bold;
+}
+
+.leaveAdmin .leave-table tr:hover {
+  background: #f1f5f9;
+}
+
+.leaveAdmin .status {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.leaveAdmin .status.pending {
+  background: #fef9c3;
+  color: #a16207;
+}
+
+.leaveAdmin .status.approved {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.leaveAdmin .status.rejected {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.leaveAdmin .actions {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+
+.leaveAdmin .btn {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  transition: 0.2s;
+}
+
+.leaveAdmin .btn.approve {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.leaveAdmin .btn.approve:hover {
+  background: #bbf7d0;
+}
+
+.leaveAdmin .btn.reject {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.leaveAdmin .btn.reject:hover {
+  background: #fecaca;
+}
+
+.leaveAdmin .btn.delete {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.leaveAdmin .btn.delete:hover {
+  background: #d1d5db;
+}
+
+.leaveAdmin .empty {
+  text-align: center;
+  padding: 12px;
+  color: #6b7280;
+}

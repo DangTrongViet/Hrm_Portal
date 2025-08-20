@@ -1,0 +1,91 @@
+/* Modal tổng thể */
+.ot-admin__modal .ant-modal-content {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(20, 40, 120, 0.18);
+}
+
+/* Tiêu đề */
+.ot-admin__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+/* Hint dưới tiêu đề */
+.ot-admin__hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 0 16px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #e8f3ff, #f3f9ff);
+  color: #1f3b77;
+  font-size: 13px;
+  border: 1px solid #e2eeff;
+}
+
+/* Form layout & nhãn */
+.ot-admin__form .ant-form-item-label > label {
+  font-weight: 600;
+  color: #2b2f42;
+}
+
+/* Dòng 2 cột (date + hours) */
+.ot-admin__row {
+  display: grid;
+  grid-template-columns: 1fr 200px;
+  gap: 14px;
+}
+@media (max-width: 576px) {
+  .ot-admin__row {
+    grid-template-columns: 1fr;
+  }
+}
+.ot-admin__col {
+  margin-bottom: 0;
+}
+
+/* Input / picker / number */
+.ot-admin__input,
+.ot-admin__picker,
+.ot-admin__number,
+.ot-admin__textarea {
+  border-radius: 10px !important;
+}
+
+/* Nhãn có icon + tooltip */
+.ot-admin__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.ot-admin__help {
+  color: #8a93a3;
+  font-size: 12px;
+  user-select: none;
+}
+
+/* Nút OK nổi bật */
+.ot-admin__ok {
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 0 18px;
+}
+
+/* Hover effect nhẹ */
+.ot-admin__form .ant-input:hover,
+.ot-admin__form .ant-input:focus,
+.ot-admin__form .ant-input-number:hover,
+.ot-admin__form .ant-input-number-focused,
+.ot-admin__form .ant-picker:hover,
+.ot-admin__form .ant-picker-focused,
+.ot-admin__form .ant-input-textarea-show-count > textarea:hover,
+.ot-admin__form .ant-input-textarea-show-count > textarea:focus {
+  box-shadow: 0 0 0 3px rgba(24, 144, 255, 0.18);
+  border-color: #91caff;
+}

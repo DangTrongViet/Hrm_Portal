@@ -1,0 +1,161 @@
+/* src/features/payroll/PayrollList.css */
+
+/* Gradient header with better text contrast */
+.payroll-gradient-header {
+  background: linear-gradient(135deg, #4e73df 0%, #1cc88a 100%);
+  color: #ffffff !important; /* Ensure white text for high contrast */
+  padding: 16px;
+}
+
+/* Button styles for better visibility */
+.payroll-toolbar .btn {
+  border-radius: 12px;
+  font-weight: 500; /* Slightly bolder text */
+  color: #ffffff !important; /* Ensure button text is white */
+  transition: all 0.3s ease;
+}
+
+.btn-outline-primary {
+  color: #4e73df !important; /* Stronger color for primary outline buttons */
+  border-color: #4e73df;
+}
+
+.btn-outline-primary:hover {
+  background-color: #4e73df !important;
+  color: #ffffff !important;
+}
+
+.btn-outline-danger {
+  color: #dc3545 !important; /* Stronger color for danger outline buttons */
+  border-color: #dc3545;
+}
+
+.btn-outline-danger:hover {
+  background-color: #dc3545 !important;
+  color: #ffffff !important;
+}
+
+/* Card styles */
+.payroll-card {
+  border: 0;
+  border-radius: 16px;
+  box-shadow: 0 10px 24px rgba(18, 38, 63, 0.06);
+  background: #ffffff;
+}
+
+.payroll-card .card-header {
+  border-bottom: 0;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  background: #ffffff;
+}
+
+/* Avatar pill */
+.avatar-pill {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff !important;
+  font-weight: 600;
+  background-color: #4e73df;
+}
+
+/* Table styles */
+.table thead th {
+  vertical-align: middle;
+  white-space: nowrap;
+  font-weight: 600; /* Bolder headers */
+  color: #1e1e1e !important; /* Darker text for headers */
+  background: #f8f9fc;
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(78, 115, 223, 0.1); /* Slightly darker hover */
+}
+
+/* Sortable headers */
+.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Badge styles */
+.badge-soft {
+  background-color: rgba(78, 115, 223, 0.2); /* Slightly darker background */
+  color: #4e73df !important; /* Stronger color */
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+/* Filter chip */
+.filter-chip {
+  border-radius: 999px;
+  background: #f8f9fc;
+  border: 1px solid #e3e6f0;
+  padding: 6px 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #1e1e1e !important; /* Darker text for better readability */
+  font-weight: 500;
+}
+
+/* Empty state */
+.payroll-empty {
+  padding: 64px 16px;
+  color: #495057 !important; /* Darker gray for better readability */
+}
+
+/* Stat cards */
+.stat-card {
+  border-radius: 14px;
+  border: 1px dashed #e3e6f0;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+  background: #ffffff;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(18, 38, 63, 0.08);
+}
+
+/* Input styles */
+.input-compact .form-control,
+.input-compact .form-select {
+  height: 40px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  border-radius: 8px;
+  color: #1e1e1e !important;
+}
+
+/* Table responsive */
+.table-responsive {
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+
+/* Sticky actions */
+.sticky-actions {
+  position: sticky;
+  right: 0;
+  background: #ffffff;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .payroll-toolbar {
+    gap: 8px !important;
+  }
+
+  .input-compact .form-control,
+  .input-compact .form-select {
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,33 @@
+/* Modal title nổi bật, không quá đậm */
+.ot-form-title {
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+
+/* Bo tròn nhẹ các input cho đồng bộ */
+.ot-input,
+.ot-input .ant-input,
+.ot-input .ant-input-number-input,
+.ot-input .ant-picker-input > input {
+  border-radius: 10px !important;
+}
+
+/* Nâng nhẹ contrast phần viền focus */
+.ant-input:focus,
+.ant-input-focused,
+.ant-picker-focused,
+.ant-input-number-focused {
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.15);
+}
+
+/* Modal nhẹ nhàng */
+.ot-form-modal .ant-modal-content {
+  border-radius: 14px;
+  box-shadow: 0 12px 28px rgba(18, 38, 63, 0.12);
+}
+
+/* Label dày hơn chút */
+.ant-form-item-label > label {
+  font-weight: 600;
+}

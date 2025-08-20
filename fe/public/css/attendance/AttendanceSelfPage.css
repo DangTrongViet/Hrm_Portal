@@ -1,0 +1,92 @@
+.attendanceSelf {
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  background: linear-gradient(to right, #f8fbff, #eef3ff);
+  min-height: 100vh;
+}
+
+.attendanceSelf .gradient-text {
+  background: linear-gradient(90deg, #007bff, #00c6ff);
+  background-clip: text; /* chuẩn */
+  -webkit-background-clip: text; /* để Safari/Chrome cũ chạy */
+  color: transparent; /* fallback */
+  -webkit-text-fill-color: transparent;
+}
+.attendanceSelf .card {
+  border-radius: 1rem;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.attendanceSelf .card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.attendanceSelf .btn {
+  border-radius: 0.75rem;
+  transition: all 0.2s ease;
+}
+
+.attendanceSelf .btn:hover {
+  transform: translateY(-2px);
+}
+
+.attendanceSelf .hrm-table th {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.attendanceSelf .hrm-table-row:hover {
+  background-color: #f1f6ff;
+  cursor: pointer;
+}
+
+.attendanceSelf input.form-control {
+  border-radius: 0.6rem;
+  border: 1px solid #ced4da;
+  transition: all 0.2s ease;
+}
+
+.attendanceSelf input.form-control:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.15);
+}
+
+.attendanceSelf .pagination-section button {
+  min-width: 90px;
+}
+
+/* Table container */
+.hrm-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 2px solid #ff9800; /* viền cam */
+  border-radius: 10px;
+  overflow: hidden; /* để bo góc không bị tràn */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* shadow nhẹ */
+  background-color: #fff; /* nền trắng */
+}
+
+/* Header cam */
+.table-orange {
+  background-color: #ff9800; /* cam */
+  color: #fff;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Ô có viền cam nhạt */
+.hrm-table th,
+.hrm-table td {
+  border: 1px solid #ffcc80;
+  padding: 12px;
+  text-align: left;
+}
+
+/* Hover row */
+.hrm-table tbody tr:hover {
+  background-color: #fff3e0; /* cam nhạt */
+  transition: background-color 0.2s ease;
+}

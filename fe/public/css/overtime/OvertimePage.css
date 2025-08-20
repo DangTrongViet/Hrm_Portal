@@ -1,0 +1,41 @@
+/* Nhẹ tay làm đẹp Antd, tránh xung đột */
+.ot-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.ant-table {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(18, 38, 63, 0.06);
+}
+
+.ant-table-thead > tr > th {
+  background: #f6f9ff !important;
+  font-weight: 600;
+}
+
+.ant-table-tbody > tr > td {
+  vertical-align: middle;
+}
+
+.ant-table-tbody > tr:hover > td {
+  background: #fafcff;
+}
+
+.ant-table-summary {
+  background: #fff;
+}
+
+.ant-table-summary .ant-table-cell {
+  border-top: 1px solid #f0f0f0;
+}
+
+/* Bo tròn nhẹ cho inputs/filter */
+.ant-input,
+.ant-select-selector,
+.ant-picker {
+  border-radius: 10px !important;
+}

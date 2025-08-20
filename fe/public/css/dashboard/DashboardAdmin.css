@@ -1,0 +1,70 @@
+.dashboardAdmin {
+  padding: 30px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f6fa;
+}
+
+.dashboardAdmin-title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #2f3640;
+}
+
+.dashboardAdmin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.dashboardAdmin-card {
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.dashboardAdmin-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.dashboardAdmin-card h3 {
+  margin-bottom: 10px;
+  color: #333;
+}
+
+/* Màu riêng cho từng loại dữ liệu */
+.dashboardAdmin-card.employees {
+  border-left: 5px solid #4cd137;
+}
+.dashboardAdmin-card.users {
+  border-left: 5px solid #487eb0;
+}
+.dashboardAdmin-card.contracts {
+  border-left: 5px solid #e1b12c;
+}
+.dashboardAdmin-card.leaves {
+  border-left: 5px solid #e84118;
+}
+.dashboardAdmin-card.overtimes {
+  border-left: 5px solid #9c88ff;
+}
+.dashboardAdmin-card.payrolls {
+  border-left: 5px solid #00a8ff;
+}
+.dashboardAdmin-card.roles {
+  border-left: 5px solid #fbc531;
+}
+.dashboardAdmin-card.permissions {
+  border-left: 5px solid #c23616;
+}
+
+.dashboardAdmin-loading {
+  padding: 50px;
+  text-align: center;
+  font-size: 1.2rem;
+  color: #718093;
+}

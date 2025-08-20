@@ -1,0 +1,100 @@
+/* Table Styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+/* Table Header */
+thead {
+  background-color: #f3f3f3;
+}
+
+th {
+  font-weight: bold;
+  color: #333;
+}
+
+/* Table Row on Hover */
+tr:hover {
+  background-color: #f9f9f9;
+}
+
+/* Status Badge Styling */
+.bg-yellow-400 {
+  background-color: #fbd38d;
+  color: #000;
+}
+
+.bg-green-400 {
+  background-color: #48bb78;
+  color: #fff;
+}
+
+.bg-red-400 {
+  background-color: #f56565;
+  color: #fff;
+}
+
+span.rounded-full {
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Button Styling */
+button {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Action Buttons */
+button.bg-green-500 {
+  background-color: #48bb78;
+  color: white;
+}
+
+button.bg-green-500:hover {
+  background-color: #38a169;
+}
+
+button.bg-yellow-500 {
+  background-color: #fbd38d;
+  color: white;
+}
+
+button.bg-yellow-500:hover {
+  background-color: #ecc94b;
+}
+
+button.bg-red-500 {
+  background-color: #f56565;
+  color: white;
+}
+
+button.bg-red-500:hover {
+  background-color: #e53e3e;
+}
+
+/* Spacing between buttons */
+button + button {
+  margin-left: 8px;
+}
+
+/* Title Styling */
+h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 16px;
+  color: #333;
+}

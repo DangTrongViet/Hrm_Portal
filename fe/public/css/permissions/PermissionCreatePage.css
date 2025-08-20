@@ -1,0 +1,22 @@
+/* Header gradient giống hệ sinh thái RBAC */
+.pcp-header {
+  background: linear-gradient(135deg, #4e73df 0%, #1cc88a 100%);
+  color: #fff;
+  border-radius: 16px;
+}
+
+/* Card bo góc + bóng mềm */
+.pcp-card {
+  border-radius: 16px;
+  box-shadow: 0 12px 28px rgba(18, 38, 63, 0.08);
+}
+
+/* Nút có bóng nhẹ */
+.pcp-btn {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* Input cao đồng đều */
+.pcp-card .form-control {
+  height: 44px;
+}

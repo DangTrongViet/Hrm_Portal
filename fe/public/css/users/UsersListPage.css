@@ -1,0 +1,295 @@
+.user .container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.user .users-card {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  overflow: hidden;
+}
+
+.user .users-header {
+  background: linear-gradient(135deg, #ff6f61 0%, #ff9a44 100%);
+  padding: 2rem;
+}
+
+.user .hrm-btn {
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  background: linear-gradient(90deg, #00c853, #64dd17);
+  color: #fff;
+  border: none;
+}
+
+.user .hrm-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 200, 83, 0.4);
+}
+
+.user .input-compact .form-control,
+.user .input-compact .form-select {
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  height: 38px;
+  background: #f8f9fa;
+}
+
+.user .input-compact .input-group-text {
+  border-radius: 8px 0 0 8px;
+  background: #f8f9fa;
+  border: 1px solid #ced4da;
+  border-right: none;
+  padding: 0 0.75rem;
+}
+
+.user .input-compact .form-control {
+  border-left: none;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.user .input-compact .btn-primary {
+  border-radius: 0 8px 8px 0;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  background: linear-gradient(90deg, #2962ff, #42a5f5);
+  border: none;
+  color: #fff;
+  height: 38px; /* Match the height of the input */
+  margin-left: -1px; /* Overlap border to align with input */
+  border-left: 1px solid #ced4da; /* Match input border */
+}
+
+.user .hrm-table {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.user .table {
+  margin-bottom: 0;
+  font-size: 0.875rem;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed; /* Ensure consistent column widths */
+}
+
+.user .table thead th {
+  background: linear-gradient(90deg, #ff6f61, #ff9a44);
+  color: #fff;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 1rem 1.5rem;
+  border-bottom: 2px solid #ff8a5b;
+  text-align: left;
+  width: auto; /* Allow dynamic width but with fixed layout */
+}
+
+/* Target the Email column (second column, index 1) */
+.user .table thead th:nth-child(2),
+.user .table tbody td:nth-child(2) {
+  width: 250px; /* Increased width for Email column */
+  min-width: 200px; /* Minimum width to ensure it doesn't shrink too much */
+}
+
+.user .table thead th:nth-child(3),
+.user .table tbody td:nth-child(3) {
+  width: 150px; /* Increased width for Email column */
+  min-width: 100px; /* Minimum width to ensure it doesn't shrink too much */
+}
+.user .table thead th:nth-child(4),
+.user .table tbody td:nth-child(4) {
+  width: 120px; /* Increased width for Email column */
+  min-width: 70px; /* Minimum width to ensure it doesn't shrink too much */
+}
+
+.user .table thead th:nth-child(6),
+.user .table tbody td:nth-child(6) {
+  width: 150px; /* Increased width for Email column */
+  min-width: 100px; /* Minimum width to ensure it doesn't shrink too much */
+}
+
+.user .table thead th:nth-child(7),
+.user .table tbody td:nth-child(7) {
+  width: 100px; /* Increased width for Email column */
+  min-width: 50px; /* Minimum width to ensure it doesn't shrink too much */
+}
+.user .table th.sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s ease;
+}
+
+.user .table th.sortable:hover {
+  background: #ff8a5b;
+}
+
+.user .table .sort-ind {
+  display: inline-block;
+  width: 12px;
+  text-align: center;
+  font-size: 0.75rem;
+  vertical-align: middle;
+}
+
+.user .table tbody tr {
+  transition: background 0.2s ease;
+}
+
+.user .table tbody tr:hover {
+  background: #fff3e0 !important;
+}
+
+.user .table tbody td {
+  padding: 1rem 1.5rem;
+  vertical-align: middle;
+  border-bottom: 1px solid #e9ecef;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 0; /* Allow truncation if content exceeds width */
+}
+
+.user .hrm-table-row.bg-light {
+  background: #fff5e1 !important;
+}
+
+.user .hrm-table-row.bg-secondary-subtle {
+  background: #ffe0b2 !important;
+}
+
+.user .badge {
+  font-size: 0.75rem;
+  padding: 0.35em 0.65em;
+  border-radius: 6px;
+  font-weight: 500;
+  background: linear-gradient(90deg, #ffca28, #ffd54f);
+  color: #333;
+}
+
+.user .badge-soft {
+  background: #ffe0b2;
+  color: #333;
+}
+
+.user .copy-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: #ff6f61;
+  transition: color 0.2s ease;
+}
+
+.user .copy-btn:hover {
+  color: #ff8a5b;
+}
+
+.user .table-actions a {
+  color: #2962ff;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.user .table-actions a:hover {
+  color: #42a5f5;
+}
+
+.user .skel-row {
+  background: #ffe0b2;
+  height: 1.5rem;
+  border-radius: 4px;
+  animation: pulse 1.5s infinite;
+}
+
+.user .pill-pagination .btn {
+  border-radius: 20px;
+  margin: 0 0.25rem;
+  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+  background: #e0f7fa;
+  border: 1px solid #00acc1;
+  color: #00acc1;
+}
+
+.user .pill-pagination .btn-primary {
+  background: linear-gradient(90deg, #00c853, #64dd17);
+  border-color: #00c853;
+  color: #fff;
+}
+
+.user .pill-pagination .btn-outline-primary {
+  border-color: #00c853;
+  color: #00c853;
+}
+
+.user .pill-pagination .btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.user .empty-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #ff6f61;
+  padding: 2rem;
+}
+
+.user .alert {
+  border-radius: 8px;
+  padding: 1rem;
+  font-size: 0.875rem;
+  background: #fff3e0;
+  border: 1px solid #ff8a5b;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+@media (max-width: 768px) {
+  .user .users-header {
+    padding: 1.5rem;
+  }
+
+  .user .table-responsive {
+    overflow-x: auto;
+  }
+
+  .user .table th,
+  .user .table td {
+    padding: 0.75rem 1rem;
+    font-size: 0.75rem;
+  }
+
+  .user .input-compact .col-6,
+  .user .input-compact .col-12 {
+    margin-bottom: 0.5rem;
+  }
+
+  .user .table thead th:nth-child(2),
+  .user .table tbody td:nth-child(2) {
+    width: 180px; /* Adjusted for smaller screens */
+    min-width: 150px;
+  }
+}

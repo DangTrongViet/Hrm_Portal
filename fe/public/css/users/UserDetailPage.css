@@ -1,0 +1,89 @@
+/* UserDetailPage polish */
+
+.user-card {
+  border: 0;
+  border-radius: 16px;
+  box-shadow: 0 12px 28px rgba(18, 38, 63, 0.08);
+}
+
+.user-header {
+  background: linear-gradient(135deg, #4e73df 0%, #1cc88a 100%);
+  color: #fff;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #fff 0%, #e3f8ee 100%);
+  /* Fallback text color for browsers that don't support text clipping */
+  color: #e3f8ee; /* Matches the end gradient color for consistency */
+  /* Vendor prefix for WebKit browsers */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  /* Standard property (limited support for 'text' value) */
+  background-clip: text;
+  /* Ensure compatibility with older browsers */
+  display: inline-block; /* Ensures consistent rendering */
+}
+
+.hrm-btn {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.info-card {
+  border: 0;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 8px 22px rgba(18, 38, 63, 0.06);
+}
+
+.info-grid .label {
+  font-size: 0.85rem;
+  color: #6c757d;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+.info-grid .value {
+  font-size: 0.98rem;
+}
+
+.avatar-circle {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  background: #e9f5ff;
+  color: #0d6efd;
+  letter-spacing: 0.5px;
+  box-shadow: inset 0 0 0 2px rgba(13, 110, 253, 0.15);
+}
+
+.badge-perm {
+  border-radius: 999px;
+  padding: 0.45rem 0.7rem;
+  font-weight: 600;
+  background: #e9f7fb;
+  color: #0c5460;
+  border: 1px solid rgba(12, 84, 96, 0.15);
+}
+
+.meta-block {
+  border-top: 1px dashed #e9ecef;
+  margin-top: 1rem;
+  padding-top: 1rem;
+}
+
+.breadcrumb-lite .breadcrumb-item + .breadcrumb-item::before {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Role section */
+.role-wrap .form-select {
+  min-width: 240px;
+}
+
+/* Empty / skeleton kept from global palette if needed */
