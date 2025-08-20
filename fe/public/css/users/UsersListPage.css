@@ -309,3 +309,28 @@
 
 /* đề phòng bị ancestor nào đó che */
 .user .table-actions { position: relative; }
+
+
+/* KHÔNG cắt dropdown ở cột Hành động */
+.user .table tbody td.table-actions,
+.user .table thead th.table-actions {
+  overflow: visible !important;
+  position: relative; /* làm mốc cho dropdown nếu cần */
+}
+
+/* Container bảng không che dropdown */
+.user .users-card,
+.user .hrm-table {
+  overflow: visible !important;
+}
+
+/* Giữ scroll ngang nhưng không che menu theo trục dọc */
+.user .table-responsive {
+  overflow-x: auto;
+  overflow-y: visible !important;
+}
+
+/* Đảm bảo menu nổi lên */
+.user .dropdown-menu {
+  z-index: 2000; /* đủ cao so với các shadow/overlay khác */
+}

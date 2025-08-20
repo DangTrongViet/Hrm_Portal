@@ -678,6 +678,7 @@ export default function UsersListPage() {
                             data-bs-toggle="dropdown"
                             data-bs-display="static"
                             data-bs-auto-close="outside"
+                            data-bs-boundary="viewport"
                             aria-expanded="false"
                           >
                             Hành động
