@@ -30,7 +30,6 @@ function pickUser(payload: RawMe | any) {
 export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const from = (location.state as any)?.from?.pathname || "/";
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginForm>({
     defaultValues: { email: "", password: "" },
@@ -39,11 +38,11 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
 
-  // Nếu đã có phiên (cookie httpOnly), tự động vào /me
+  // Nếu đã có phiên (cookie httpOnly) → vào /me
   useEffect(() => {
     (async () => {
       try {
-        const me = await getJSON<RawMe>("/me"); // KHÔNG thêm /api vì BASE đã có /api
+        const me = await getJSON<RawMe>("/me"); // KHÔNG thêm /api (BASE đã có /api)
         const u = pickUser(me);
         if (u) {
           localStorage.setItem("currentUser", JSON.stringify(u));
@@ -58,13 +57,23 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginForm) => {
     setError(null);
     try {
-      const resp = await postJSON<{ message: string; user: { id: number; email: string; full_name: string; permissionNames?: string[] } }>(
-        "/auth/login", // KHÔNG thêm /api
+      // 1) Login (BE set cookie httpOnly + trả user JSON)
+      await postJSON<{ message: string; user: { id: number; email: string; full_name: string; permissionNames?: string[] } }>(
+        "/auth/login",
         data
       );
-      localStorage.setItem("currentUser", JSON.stringify(resp.user));
-      const dest = from !== "/" ? from : "/me";
-      navigate(dest, { replace: true });
+
+      // 2) (Khuyến nghị) gọi lại /me để lấy đúng định dạng hiện hành từ BE/middleware
+      try {
+        const me = await getJSON<RawMe>("/me");
+        const u = pickUser(me);
+        if (u) localStorage.setItem("currentUser", JSON.stringify(u));
+      } catch {
+        // fallback: nếu /me lỗi (không nên), có thể giữ nguyên
+      }
+
+      // 3) Luôn đưa người dùng vào /me (đúng theo yêu cầu của bạn)
+      navigate("/me", { replace: true });
     } catch (e: any) {
       setError(e?.message || "Đăng nhập thất bại");
     }
