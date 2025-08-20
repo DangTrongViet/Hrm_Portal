@@ -123,24 +123,24 @@ export default function UsersListPage() {
         sortKey === 'role'
           ? (a.role?.name || '').toLowerCase()
           : sortKey === 'isVerified'
-            ? a.isVerified
-              ? 1
-              : 0
-            : sortKey === 'createdAt'
-              ? new Date(a.createdAt).getTime()
-              : // name, email, status
-                String((a as any)[sortKey] ?? '').toLowerCase();
+          ? a.isVerified
+            ? 1
+            : 0
+          : sortKey === 'createdAt'
+          ? new Date(a.createdAt).getTime()
+          : // name, email, status
+            String((a as any)[sortKey] ?? '').toLowerCase();
 
       const B =
         sortKey === 'role'
           ? (b.role?.name || '').toLowerCase()
           : sortKey === 'isVerified'
-            ? b.isVerified
-              ? 1
-              : 0
-            : sortKey === 'createdAt'
-              ? new Date(b.createdAt).getTime()
-              : String((b as any)[sortKey] ?? '').toLowerCase();
+          ? b.isVerified
+            ? 1
+            : 0
+          : sortKey === 'createdAt'
+          ? new Date(b.createdAt).getTime()
+          : String((b as any)[sortKey] ?? '').toLowerCase();
 
       if (A < B) return -1 * dir;
       if (A > B) return 1 * dir;
@@ -171,7 +171,9 @@ export default function UsersListPage() {
           onClick={() =>
             setParam({ ...Object.fromEntries(sp), page: String(i) })
           }
-          className={`btn btn-sm ${i === page ? 'btn-primary' : 'btn-outline-primary'} px-3`}
+          className={`btn btn-sm ${
+            i === page ? 'btn-primary' : 'btn-outline-primary'
+          } px-3`}
         >
           {i}
         </button>
@@ -490,7 +492,9 @@ export default function UsersListPage() {
                   sortedRows.map((u, index) => (
                     <tr
                       key={u.id}
-                      className={`border-bottom border-2 border-light hrm-table-row ${index % 2 === 0 ? 'bg-light' : 'bg-secondary-subtle'}`}
+                      className={`border-bottom border-2 border-light hrm-table-row ${
+                        index % 2 === 0 ? 'bg-light' : 'bg-secondary-subtle'
+                      }`}
                     >
                       <td className="px-4 py-3 fw-medium text-primary-emphasis">
                         <div className="d-flex align-items-center gap-2">
@@ -536,7 +540,11 @@ export default function UsersListPage() {
                       </td>
                       <td className="px-4 py-3 text-center">
                         <span
-                          className={`badge ${u.status === 'active' ? 'text-bg-success' : 'text-bg-warning'} bg-gradient`}
+                          className={`badge ${
+                            u.status === 'active'
+                              ? 'text-bg-success'
+                              : 'text-bg-warning'
+                          } bg-gradient`}
                         >
                           {u.status === 'active'
                             ? 'Đang hoạt động'
@@ -580,6 +588,13 @@ export default function UsersListPage() {
                           className="text-decoration-none fw-medium"
                         >
                           Chi tiết
+                        </Link>
+                        {' | '}
+                        <Link
+                          to={`/users/${u.id}/edit`}
+                          className="text-decoration-none text-primary fw-medium"
+                        >
+                          Sửa
                         </Link>
                       </td>
                     </tr>

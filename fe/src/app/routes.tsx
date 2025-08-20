@@ -16,6 +16,7 @@ import EmployeeEditPage from '../features/employees/pages/EmployeeEditPage';
 import UsersListPage from '../features/users/pages/UsersListPage';
 import UserCreatePage from '../features/users/pages/UserCreatePage';
 import UserDetailPage from '../features/users/pages/UserDetailPage';
+import EditUserPage from '../features/users/pages/EditUsersPage';
 import RolesListPage from '../features/roles/pages/RoleListPage';
 import RoleCreatePage from '../features/roles/pages/RoleCreatePage';
 import RoleDetailPage from '../features/roles/pages/RoleDetailPage';
@@ -71,6 +72,7 @@ export default function AppRoutes() {
             <Route path="/users" element={<UsersListPage />} />
             <Route path="/users/new" element={<UserCreatePage />} />
             <Route path="/users/:id" element={<UserDetailPage />} />
+            <Route path="/users/:id/edit" element={<EditUserPage />} />
           </Route>
 
           <Route element={<RequirePerm need={['manage_roles']} />}>
