@@ -1,54 +1,60 @@
-// src/lib/http.ts
-// ✅ BASE có thể là http://localhost:3000/api hoặc https://api-hrm-portal.onrender.com/api
-//   → FE KHÔNG thêm /api trong path (chỉ dùng "/me", "/auth/login", ...)
-export const BASE = (import.meta.env.VITE_API_BASE_URL as string || "").replace(/\/+$/, "");
+// BASE có thể là: http://localhost:3000/api hoặc https://api-hrm-portal.onrender.com/api
+export const BASE =
+  ((import.meta.env.VITE_API_BASE_URL as string) || "").replace(/\/+$/, "");
 
-// Ghép URL an toàn, không bị // hoặc /api/api
+/** Ghép URL an toàn, hỗ trợ cả URL tuyệt đối; KHÔNG bị lặp /api */
 const url = (path: string) => {
   const p = String(path || "");
-  if (/^https?:\/\//i.test(p)) return p;                       // cho phép pass full URL khi cần
-  return `${BASE}/${p.replace(/^\/+/, "")}`;
+  if (/^https?:\/\//i.test(p)) return p;                // absolute URL
+  if (!BASE) return `/${p.replace(/^\/+/, "")}`;        // no BASE -> relative
+  return `${BASE}/${p.replace(/^\/+/, "")}`;            // normal join
 };
 
 async function parseResponse<T>(res: Response): Promise<T> {
   const ct = res.headers.get("content-type") || "";
+  const isJSON = ct.includes("application/json") || ct.includes("+json");
 
-  // ❗ Nếu response lỗi → cố gắng parse JSON trước, fallback text
+  // 204 No Content
+  if (res.status === 204) return undefined as unknown as T;
+
+  const readText = async () => {
+    try { return await res.text(); } catch { return ""; }
+  };
+
   if (!res.ok) {
-    try {
-      if (ct.includes("application/json")) {
+    if (isJSON) {
+      try {
         const j = await res.json();
         throw new Error(j?.message || `HTTP ${res.status}`);
+      } catch {
+        const t = await readText();
+        throw new Error(t || `HTTP ${res.status}`);
       }
-      const t = await res.text();
-      throw new Error(t || `HTTP ${res.status}`);
-    } catch (e: any) {
-      throw new Error(e?.message || `HTTP ${res.status}`);
+    } else {
+      const t = await readText();
+      try {
+        const j = t ? JSON.parse(t) : null;
+        throw new Error(j?.message || `HTTP ${res.status}`);
+      } catch {
+        throw new Error(t || `HTTP ${res.status}`);
+      }
     }
   }
 
-  // ✅ Một số BE set sai content-type → thử parse text->JSON
-  if (!ct.includes("application/json")) {
-    const t = await res.text();
-    try {
-      return JSON.parse(t) as T;
-    } catch {
-      throw new Error("Server did not return JSON");
-    }
-  }
+  if (isJSON) return res.json();
 
-  return res.json();
+  const t = await readText();
+  if (!t) return undefined as unknown as T;
+  try { return JSON.parse(t) as T; } catch { throw new Error("Server did not return JSON"); }
 }
 
-// Mặc định luôn gửi cookie (httpOnly) theo CORS
-const common: RequestInit = { credentials: "include" };
+const common: RequestInit = { credentials: "include" }; // gửi cookie httpOnly mọi request
 
 export async function getJSON<T>(path: string): Promise<T> {
   const res = await fetch(url(path), {
     ...common,
     method: "GET",
-    // ❗ KHÔNG set Content-Type cho GET, chỉ Accept
-    headers: { Accept: "application/json" },
+    headers: { Accept: "application/json" }, // KHÔNG set Content-Type cho GET
   });
   return parseResponse<T>(res);
 }

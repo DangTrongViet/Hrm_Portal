@@ -4,10 +4,7 @@ import { useForm } from "react-hook-form";
 import { postJSON, getJSON } from "../../../lib/http";
 import "../../../../public/css/auth/LoginPage.css";
 
-interface LoginForm {
-  email: string;
-  password: string;
-}
+interface LoginForm { email: string; password: string; }
 
 type RawMe =
   | { user?: any }
@@ -35,23 +32,18 @@ export default function LoginPage() {
   const location = useLocation();
   const from = (location.state as any)?.from?.pathname || "/";
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<LoginForm>({
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginForm>({
     defaultValues: { email: "", password: "" },
   });
 
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
 
-  // Nếu đã có phiên (cookie httpOnly), tự động vào app
+  // Nếu đã có phiên (cookie httpOnly), tự động vào /me
   useEffect(() => {
     (async () => {
       try {
-        // KHÔNG thêm /api vì BASE đã có /api trong VITE_API_BASE_URL
-        const me = await getJSON<RawMe>("/me");
+        const me = await getJSON<RawMe>("/me"); // KHÔNG thêm /api vì BASE đã có /api
         const u = pickUser(me);
         if (u) {
           localStorage.setItem("currentUser", JSON.stringify(u));
@@ -66,15 +58,11 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginForm) => {
     setError(null);
     try {
-      // KHÔNG thêm /api
-      const resp = await postJSON<{
-        message: string;
-        user: { id: number; email: string; full_name: string; permissionNames?: string[] };
-      }>("/auth/login", data);
-
+      const resp = await postJSON<{ message: string; user: { id: number; email: string; full_name: string; permissionNames?: string[] } }>(
+        "/auth/login", // KHÔNG thêm /api
+        data
+      );
       localStorage.setItem("currentUser", JSON.stringify(resp.user));
-
-      // Nếu from === "/" dễ bị guard, chuyển về /me an toàn
       const dest = from !== "/" ? from : "/me";
       navigate(dest, { replace: true });
     } catch (e: any) {
@@ -95,7 +83,6 @@ export default function LoginPage() {
             </div>
             <span className="brand-text">HRM Portal</span>
           </div>
-
           <div className="hero-content">
             <h1>
               Quản lý nhân sự <br />
@@ -104,7 +91,6 @@ export default function LoginPage() {
             <p className="hero-description">
               Theo dõi nhân viên, phòng ban, chấm công và lương thưởng với giao diện hiện đại và trực quan.
             </p>
-
             <div className="stats-grid">
               {[
                 { number: "10k+", label: "Hồ sơ" },
@@ -118,7 +104,6 @@ export default function LoginPage() {
               ))}
             </div>
           </div>
-
           <div className="copyright">© {new Date().getFullYear()} HRM Inc. All rights reserved.</div>
         </div>
 
