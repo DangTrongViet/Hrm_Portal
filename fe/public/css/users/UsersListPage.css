@@ -342,3 +342,74 @@
 
 .user .table-actions { position: relative; }
 .user .dropdown-menu { position: absolute; z-index: 2000; }
+/* --- Dropdown thuần CSS (không cần bootstrap JS) --- */
+.user .table-responsive { overflow-x: auto; overflow-y: visible; }
+.user .users-card, .user .hrm-table { overflow: visible; }
+
+.user .table-actions { position: relative; }
+
+.user .dd { position: relative; display: inline-block; outline: none; }
+.user .dd:focus-within .dd-menu { display: block; }
+
+/* Nút toggle giả lập btn-outline-secondary */
+.user .dd-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .375rem .75rem;
+  font-size: .875rem;
+  line-height: 1.5;
+  border: 1px solid #ced4da;
+  border-radius: .375rem;
+  background: #fff;
+  color: #495057;
+  cursor: pointer;
+}
+.user .dd-toggle:hover { background: #f8f9fa; }
+.user .dd-toggle:focus { outline: 2px solid #bfe3ff; outline-offset: 2px; }
+.user .dd-toggle .caret { font-size: .8em; opacity: .7; }
+
+/* Menu */
+.user .dd-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 180px;
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: .5rem;
+  padding: .25rem 0;
+  box-shadow: 0 10px 24px rgba(0,0,0,.12);
+  display: none;
+  z-index: 2000;
+}
+.user .dd-menu li { list-style: none; }
+.user .dd-menu .dropdown-item {
+  display: block;
+  width: 100%;
+  padding: .5rem .75rem;
+  font-size: .9rem;
+  color: #212529;
+  text-decoration: none;
+  background: transparent;
+  border: 0;
+  text-align: left;
+  cursor: pointer;
+}
+.user .dd-menu .dropdown-item:hover { background: #f8f9fa; }
+.user .dd-menu .dropdown-item:disabled { color: #adb5bd; cursor: not-allowed; }
+
+.user .dd-divider {
+  height: 1px;
+  margin: .25rem 0;
+  background: #e9ecef;
+}
+
+/* Cell có thể click (xác minh) */
+.user .verify-cell { cursor: pointer; transition: transform .05s ease, opacity .15s ease; }
+.user .verify-cell:active { transform: scale(.98); }
+.user .verify-cell:focus { outline: 2px dashed #79b; outline-offset: 2px; }
+
+/* Đảm bảo text không đẩy vỡ layout */
+.user .table { table-layout: fixed; width: 100%; }
+.user .table thead th, .user .table tbody td { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
