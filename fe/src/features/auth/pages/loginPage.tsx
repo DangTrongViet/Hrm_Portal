@@ -9,7 +9,7 @@ interface LoginForm { email: string; password: string; }
 type RawMe =
   | { user?: any }
   | { data?: any }
-  | { id?: number; email?: string; full_name?: string; permissionNames?: string[]; permissions?: string[] };
+  | { id?: number; email?: string; full_name?: string; name?: string; permissionNames?: string[]; permissions?: string[] };
 
 function pickUser(payload: RawMe | any) {
   if (!payload) return null;
@@ -42,7 +42,7 @@ export default function LoginPage() {
   useEffect(() => {
     (async () => {
       try {
-        const me = await getJSON<RawMe>("/me"); // KHÔNG thêm /api (BASE đã có /api)
+        const me = await getJSON<RawMe>("/me"); // KHÔNG thêm /api vì BASE đã có /api
         const u = pickUser(me);
         if (u) {
           localStorage.setItem("currentUser", JSON.stringify(u));
@@ -57,23 +57,21 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginForm) => {
     setError(null);
     try {
-      // 1) Login (BE set cookie httpOnly + trả user JSON)
-      await postJSON<{ message: string; user: { id: number; email: string; full_name: string; permissionNames?: string[] } }>(
-        "/auth/login",
-        data
-      );
+      // 1) login: BE set cookie httpOnly
+      await postJSON<{ message: string; user: any }>("/auth/login", data);
 
-      // 2) (Khuyến nghị) gọi lại /me để lấy đúng định dạng hiện hành từ BE/middleware
+      // 2) verify cookie hoạt động bằng cách gọi lại /me
       try {
         const me = await getJSON<RawMe>("/me");
         const u = pickUser(me);
-        if (u) localStorage.setItem("currentUser", JSON.stringify(u));
-      } catch {
-        // fallback: nếu /me lỗi (không nên), có thể giữ nguyên
+        if (!u) throw new Error("Không lấy được thông tin người dùng sau đăng nhập");
+        localStorage.setItem("currentUser", JSON.stringify(u));
+        // 3) vào thẳng /me (theo yêu cầu)
+        navigate("/me", { replace: true });
+      } catch (err: any) {
+        // Thường do cookie chưa được gửi kèm (CORS/SameSite/Secure)
+        setError(err?.message || "Phiên chưa được thiết lập. Vui lòng thử lại.");
       }
-
-      // 3) Luôn đưa người dùng vào /me (đúng theo yêu cầu của bạn)
-      navigate("/me", { replace: true });
     } catch (e: any) {
       setError(e?.message || "Đăng nhập thất bại");
     }
