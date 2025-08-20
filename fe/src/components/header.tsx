@@ -1,70 +1,66 @@
-import { Link, NavLink, useNavigate } from 'react-router-dom';
-import '../../public/css/headers/header.css';
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { postNoBody } from "../lib/http"; // ✅ dùng http helper để có credentials/include
+import "../styles/header.css";            // 🔹 khuyên chuyển css vào src/styles (tránh import từ public)
+
+// Kiểu dữ liệu
 type NavItem = { to: string; label: string; require?: string[] };
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+// ⚠️ Đồng bộ tên quyền với BE: dùng dấu gạch dưới (_)
 const NAV_ITEMS: NavItem[] = [
-  { to: '/', label: 'Trang chủ', require: ['manage-roles'] },
-  { to: '/employees', label: 'Nhân viên', require: ['manage_users'] },
-  {
-    to: '/users',
-    label: 'Người dùng',
-    require: ['manage_users', 'manage_roles'],
-  },
-  { to: '/roles', label: 'Vai trò', require: ['manage_roles'] },
-  { to: '/permissions', label: 'Quyền', require: ['manage_roles'] },
-  { to: '/attendance', label: 'Chấm công', require: ['checkin_checkout'] },
-  {
-    to: '/attendance/admin',
-    label: 'QL Chấm công',
-    require: ['manage_attendance'],
-  },
-  { to: '/contracts', label: 'QL Hợp đồng', require: ['manage_contracts'] },
-  { to: '/leaves', label: 'QL Đơn nghỉ làm', require: ['request_leave'] },
-  {
-    to: '/admin/leaves',
-    label: 'QL Đơn nghỉ làm',
-    require: ['approve_leaves'],
-  },
-  {
-    to: '/admin/overtimes',
-    label: 'QL Tăng ca',
-    require: ['approve_overtime'],
-  },
-  { to: '/overtimes', label: 'QL Tăng ca', require: ['request_overtime'] },
-  { to: '/admin/payroll', label: 'Bảng lương', require: ['calculate_payroll'] },
-  { to: '/payroll', label: 'Bảng lương', require: ['view_payroll'] },
+  { to: "/", label: "Trang chủ", require: ["manage_roles"] }, // was manage-roles
+  { to: "/employees", label: "Nhân viên", require: ["manage_users"] },
+  { to: "/users", label: "Người dùng", require: ["manage_users", "manage_roles"] },
+  { to: "/roles", label: "Vai trò", require: ["manage_roles"] },
+  { to: "/permissions", label: "Quyền", require: ["manage_roles"] },
+  { to: "/attendance", label: "Chấm công", require: ["checkin_checkout"] },
+  { to: "/attendance/admin", label: "QL Chấm công", require: ["manage_attendance"] },
+  { to: "/contracts", label: "QL Hợp đồng", require: ["manage_contracts"] },
+  { to: "/leaves", label: "QL Đơn nghỉ làm", require: ["request_leave"] },
+  { to: "/admin/leaves", label: "QL Đơn nghỉ làm", require: ["approve_leaves"] },
+  { to: "/admin/overtimes", label: "QL Tăng ca", require: ["approve_overtime"] },
+  { to: "/overtimes", label: "QL Tăng ca", require: ["request_overtime"] },
+  { to: "/admin/payroll", label: "Bảng lương", require: ["calculate_payroll"] },
+  { to: "/payroll", label: "Bảng lương", require: ["view_payroll"] },
 ];
+
+// Chuẩn hoá quyền để so sánh (đổi - và _ về _; lowercase)
+const norm = (s: string) => String(s || "").replace(/[-\s]/g, "_").toLowerCase();
 
 export default function Header() {
   const nav = useNavigate();
-  const raw = localStorage.getItem('currentUser');
+
+  const raw = localStorage.getItem("currentUser");
   const user = raw ? JSON.parse(raw) : null;
 
-  // Lấy mảng quyền từ currentUser.permissionNames (mặc định [])
-  const perms: string[] = Array.isArray(user?.permissionNames)
-    ? user.permissionNames.map((p: string) => p.toLowerCase())
-    : [];
+  // Lấy danh sách quyền từ user.permissionNames (mặc định [])
+  const perms: string[] = Array.isArray(user?.permissionNames) ? user.permissionNames : [];
+  const permsSet = new Set(perms.map(norm));
 
   // Lọc các item có quyền
   const visible = NAV_ITEMS.filter(
-    (i) => !i.require || i.require.some((r) => perms.includes(r.toLowerCase()))
+    (i) => !i.require || i.require.some((r) => permsSet.has(norm(r)))
   );
 
-  const displayName = user?.full_name || user?.name || user?.email || '';
+  const displayName = user?.full_name || user?.name || user?.email || "";
 
   const onLogout = async () => {
-    // Confirm logout
-    if (!confirm('Bạn có chắc chắn muốn đăng xuất?')) return;
+    if (!confirm("Bạn có chắc chắn muốn đăng xuất?")) return;
 
     try {
-      await fetch(`${API_BASE_URL}/auth/logout`, {
-        method: 'POST',
-        credentials: 'include',
-      });
-    } catch {}
-    localStorage.removeItem('token');
-    localStorage.removeItem('currentUser');
-    nav('/login', { replace: true });
+      // BE clear cookie httpOnly
+      await postNoBody("/auth/logout");
+    } catch {
+      // Ignore lỗi mạng khi logout
+    } finally {
+      // ✅ Xoá sạch toàn bộ localStorage như bạn yêu cầu
+      try {
+        localStorage.clear();
+        // Phát tín hiệu cho tab khác (nếu có) cũng logout
+        localStorage.setItem("__logout__", String(Date.now()));
+      } catch {}
+      // Điều hướng về trang đăng nhập
+      nav("/login", { replace: true });
+    }
   };
 
   return (
@@ -82,11 +78,9 @@ export default function Header() {
             <NavLink
               key={item.to}
               to={item.to}
-              className={({ isActive }) =>
-                `nav-link ${isActive ? 'active' : ''}`
-              }
+              className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
               style={{ animationDelay: `${index * 0.05}s` }}
-              end={item.to === '/'}
+              end={item.to === "/"}
             >
               <span>{item.label}</span>
             </NavLink>
@@ -105,11 +99,7 @@ export default function Header() {
                     {displayName}
                   </Link>
                 )}
-                <button
-                  onClick={onLogout}
-                  className="header-btn btn-logout"
-                  type="button"
-                >
+                <button onClick={onLogout} className="header-btn btn-logout" type="button">
                   <span>Đăng xuất</span>
                 </button>
               </>
