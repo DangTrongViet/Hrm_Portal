@@ -52,7 +52,7 @@ export default function EditUsersPage() {
         setLoading(true);
 
         // 1) Lấy user (đúng route BE)
-        const user = await apiGet<UserAdmin>(`/admin/users/${id}`);
+        const user = await apiGet<UserAdmin>(`/users/${id}`);
         if (!alive) return;
         setForm(user);
 
@@ -83,7 +83,7 @@ export default function EditUsersPage() {
 
     try {
       setSaving(true);
-      await apiPatch(`/admin/users/${id}`, {
+      await apiPatch(`/users/${id}`, {
         name: form.name?.trim(),
         email: form.email?.trim().toLowerCase(),
         phoneNumber: form.phoneNumber || null,
