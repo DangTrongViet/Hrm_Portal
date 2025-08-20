@@ -1,23 +1,40 @@
-// src/pages/users/EditUserPage.tsx
+// src/features/users/pages/EditUsersPage.tsx
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { apiGet, apiPatch } from '../../../lib/api';
 
 type RoleLite = { id: number; name: string; department?: string | null };
+type RoleListResp = { data: RoleLite[] };
 
-export default function EditUserPage() {
+type UserAdmin = {
+  id: number;
+  name: string;
+  email: string;
+  phoneNumber?: string | null;
+  address?: string | null;
+  status: 'active' | 'inactive';
+  role?: RoleLite | null;
+  role_id?: number;        // phòng khi BE trả
+  isVerified: boolean;
+  birthDate?: string | null;
+  createdAt?: string;
+  created_at?: string;     // phòng khi snake_case
+  updatedAt?: string;
+};
+
+export default function EditUsersPage() {
   const { id } = useParams<{ id: string }>();
   const nav = useNavigate();
 
-  const [form, setForm] = useState<any>(null);
+  const [form, setForm] = useState<UserAdmin | null>(null);
   const [roles, setRoles] = useState<RoleLite[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState<string>('');
   const [toast, setToast] = useState<{ type: 'success' | 'danger'; msg: string } | null>(null);
 
-  // ===== Helpers =====
-  const setField = (name: string, value: any) => setForm((f: any) => ({ ...f, [name]: value }));
+  const setField = (name: keyof UserAdmin, value: any) =>
+    setForm((f) => (f ? { ...f, [name]: value } : f));
 
   const emailValid = useMemo(
     () => typeof form?.email === 'string' && /^\S+@\S+\.\S+$/.test(form.email.trim()),
@@ -28,34 +45,27 @@ export default function EditUserPage() {
     [form?.name]
   );
 
-  // ===== Load user & roles =====
   useEffect(() => {
     let alive = true;
     (async () => {
       try {
         setLoading(true);
-        const [user, rlist] = await Promise.allSettled([
-          apiGet(`/users/${id}`),                    // BE: GET /admin/users/:id
-          apiGet(`/roles?active=1`).catch(() => [])  // nếu chưa có route roles thì ignore
-        ]);
+
+        // 1) Lấy user (đúng route BE)
+        const user = await apiGet<UserAdmin>(`/admin/users/${id}`);
         if (!alive) return;
+        setForm(user);
 
-        if (user.status === 'fulfilled') {
-          setForm(user.value);
-        } else {
-          throw new Error((user as any).reason?.message || 'Không tải được user');
-        }
-
-        if (rlist.status === 'fulfilled' && Array.isArray(rlist.value?.data)) {
-          setRoles(rlist.value.data as RoleLite[]);
-        } else {
-          // fallback: nếu không có API roles, vẫn render current role
-          setRoles((prev) =>
-            prev.length ? prev : (user as any).value?.role ? [(user as any).value.role] : []
-          );
+        // 2) Lấy roles (nếu có API /roles), KHÔNG ép buộc .data trên {}
+        try {
+          const rlist = await apiGet<RoleListResp>(`/roles?active=1`);
+          if (alive && Array.isArray(rlist?.data)) setRoles(rlist.data);
+        } catch {
+          // ignore: nếu không có API roles thì giữ rỗng hoặc dùng role hiện có
+          if (alive && user.role) setRoles([user.role]);
         }
       } catch (e: any) {
-        setErr(e?.message || 'Có lỗi khi tải dữ liệu');
+        if (alive) setErr(e?.message || 'Có lỗi khi tải dữ liệu');
       } finally {
         if (alive) setLoading(false);
       }
@@ -65,15 +75,15 @@ export default function EditUserPage() {
     };
   }, [id]);
 
-  // ===== Submit =====
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!form) return;
     if (!nameValid) return setToast({ type: 'danger', msg: 'Tên tối thiểu 2 ký tự' });
     if (!emailValid) return setToast({ type: 'danger', msg: 'Email không hợp lệ' });
 
     try {
       setSaving(true);
-      await apiPatch(`/users/${id}`, {
+      await apiPatch(`/admin/users/${id}`, {
         name: form.name?.trim(),
         email: form.email?.trim().toLowerCase(),
         phoneNumber: form.phoneNumber || null,
@@ -81,8 +91,8 @@ export default function EditUserPage() {
         status: form.status,
         role_id: form.role?.id ?? form.role_id ?? undefined,
         isVerified: !!form.isVerified,
-        birthDate: form.birthDate || null
-      }); // BE: PATCH /admin/users/:id
+        birthDate: form.birthDate || null,
+      });
       setToast({ type: 'success', msg: 'Cập nhật thành công' });
       setTimeout(() => nav('/users'), 600);
     } catch (e: any) {
@@ -92,7 +102,6 @@ export default function EditUserPage() {
     }
   };
 
-  // ===== UI =====
   if (loading) {
     return (
       <div className="container py-5">
@@ -111,12 +120,7 @@ export default function EditUserPage() {
   if (!form) {
     return (
       <div className="container py-5">
-        <div className="alert alert-danger d-flex align-items-center" role="alert">
-          <svg width="18" height="18" viewBox="0 0 24 24" className="me-2">
-            <path d="M12 9v4" /><path d="M12 17h.01" /><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z" />
-          </svg>
-          {err || 'Không tìm thấy dữ liệu'}
-        </div>
+        <div className="alert alert-danger">Không tìm thấy dữ liệu: {err}</div>
         <Link to="/users" className="btn btn-outline-primary">Quay lại danh sách</Link>
       </div>
     );
@@ -124,7 +128,6 @@ export default function EditUserPage() {
 
   return (
     <div className="container py-4">
-      {/* Breadcrumb + actions */}
       <div className="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb mb-0">
@@ -138,7 +141,6 @@ export default function EditUserPage() {
         </div>
       </div>
 
-      {/* Header card */}
       <div className="card shadow-sm mb-4">
         <div className="card-body d-flex align-items-center justify-content-between flex-wrap gap-3">
           <div>
@@ -156,60 +158,43 @@ export default function EditUserPage() {
         </div>
       </div>
 
-      {/* Form card */}
       <form onSubmit={onSubmit} className="card shadow-sm">
         <div className="card-header bg-white">
           <h3 className="h6 mb-0">Thông tin tài khoản</h3>
         </div>
         <div className="card-body">
           <div className="row g-4">
-            {/* Left column */}
             <div className="col-12 col-lg-6">
               <div className="mb-3">
                 <label className="form-label">Tên<span className="text-danger">*</span></label>
-                <div className="input-group">
-                  <span className="input-group-text bg-white">
-                    <i className="bi bi-person"></i>
-                  </span>
-                  <input
-                    className={`form-control ${!nameValid ? 'is-invalid' : ''}`}
-                    value={form.name || ''}
-                    onChange={(e) => setField('name', e.target.value)}
-                    placeholder="Ví dụ: Nguyễn Văn A"
-                  />
-                  {!nameValid && <div className="invalid-feedback">Tên tối thiểu 2 ký tự</div>}
-                </div>
+                <input
+                  className={`form-control ${!nameValid ? 'is-invalid' : ''}`}
+                  value={form.name || ''}
+                  onChange={(e) => setField('name', e.target.value)}
+                  placeholder="Ví dụ: Nguyễn Văn A"
+                />
+                {!nameValid && <div className="invalid-feedback">Tên tối thiểu 2 ký tự</div>}
               </div>
 
               <div className="mb-3">
                 <label className="form-label">Email<span className="text-danger">*</span></label>
-                <div className="input-group">
-                  <span className="input-group-text bg-white">
-                    <i className="bi bi-envelope"></i>
-                  </span>
-                  <input
-                    className={`form-control ${!emailValid ? 'is-invalid' : ''}`}
-                    value={form.email || ''}
-                    onChange={(e) => setField('email', e.target.value)}
-                    placeholder="name@example.com"
-                  />
-                  {!emailValid && <div className="invalid-feedback">Email không hợp lệ</div>}
-                </div>
+                <input
+                  className={`form-control ${!emailValid ? 'is-invalid' : ''}`}
+                  value={form.email || ''}
+                  onChange={(e) => setField('email', e.target.value)}
+                  placeholder="name@example.com"
+                />
+                {!emailValid && <div className="invalid-feedback">Email không hợp lệ</div>}
               </div>
 
               <div className="mb-3">
                 <label className="form-label">Số điện thoại</label>
-                <div className="input-group">
-                  <span className="input-group-text bg-white">
-                    <i className="bi bi-telephone"></i>
-                  </span>
-                  <input
-                    className="form-control"
-                    value={form.phoneNumber || ''}
-                    onChange={(e) => setField('phoneNumber', e.target.value)}
-                    placeholder="09xx..."
-                  />
-                </div>
+                <input
+                  className="form-control"
+                  value={form.phoneNumber || ''}
+                  onChange={(e) => setField('phoneNumber', e.target.value)}
+                  placeholder="09xx..."
+                />
               </div>
 
               <div className="mb-3">
@@ -223,14 +208,13 @@ export default function EditUserPage() {
               </div>
             </div>
 
-            {/* Right column */}
             <div className="col-12 col-lg-6">
               <div className="mb-3">
                 <label className="form-label">Trạng thái</label>
                 <select
                   className="form-select"
                   value={form.status || 'active'}
-                  onChange={(e) => setField('status', e.target.value)}
+                  onChange={(e) => setField('status', e.target.value as UserAdmin['status'])}
                 >
                   <option value="active">Đang hoạt động</option>
                   <option value="inactive">Ngưng hoạt động</option>
@@ -243,7 +227,9 @@ export default function EditUserPage() {
                   className="form-select"
                   value={form.role?.id ?? ''}
                   onChange={(e) =>
-                    setForm((f: any) => ({ ...f, role: { ...(f.role || {}), id: Number(e.target.value) } }))
+                    setForm((f) =>
+                      f ? { ...f, role: { ...(f.role || {} as RoleLite), id: Number(e.target.value) } } : f
+                    )
                   }
                 >
                   <option value="">— Chọn vai trò —</option>
@@ -253,7 +239,7 @@ export default function EditUserPage() {
                     </option>
                   ))}
                 </select>
-                <div className="form-text">BE nhận `role_id` — mình sẽ map từ chọn này khi submit.</div>
+                <div className="form-text">BE nhận `role_id` khi submit.</div>
               </div>
 
               <div className="mb-3">
@@ -267,7 +253,7 @@ export default function EditUserPage() {
                     onChange={(e) => setField('isVerified', e.target.checked)}
                   />
                   <label className="form-check-label" htmlFor="verifiedSwitch">
-                    {form.isVerified ? 'Đã xác minh (OTP/Invite sẽ được dọn khi lưu)' : 'Chưa xác minh'}
+                    {form.isVerified ? 'Đã xác minh' : 'Chưa xác minh'}
                   </label>
                 </div>
               </div>
@@ -277,7 +263,7 @@ export default function EditUserPage() {
                 <input
                   type="date"
                   className="form-control"
-                  value={form.birthDate ? new Date(form.birthDate).toISOString().substring(0,10) : ''}
+                  value={form.birthDate ? new Date(form.birthDate).toISOString().substring(0, 10) : ''}
                   onChange={(e) => setField('birthDate', e.target.value || null)}
                 />
               </div>
@@ -287,10 +273,15 @@ export default function EditUserPage() {
 
         <div className="card-footer bg-white d-flex justify-content-between align-items-center">
           <small className="text-muted">
-            Tạo: {new Date(form.createdAt || form.created_at || Date.now()).toLocaleString()}
+            Tạo:{' '}
+            {new Date(
+              form.createdAt || form.created_at || new Date().toISOString()
+            ).toLocaleString()}
           </small>
           <div className="d-flex gap-2">
-            <button type="button" className="btn btn-outline-secondary" onClick={() => nav('/users')}>Huỷ</button>
+            <button type="button" className="btn btn-outline-secondary" onClick={() => nav('/users')}>
+              Huỷ
+            </button>
             <button type="submit" className="btn btn-primary" disabled={saving}>
               {saving ? 'Đang lưu…' : 'Lưu thay đổi'}
             </button>
@@ -298,7 +289,6 @@ export default function EditUserPage() {
         </div>
       </form>
 
-      {/* Toast */}
       {toast && (
         <div
           className={`toast align-items-center text-bg-${toast.type} border-0 show position-fixed`}
@@ -309,7 +299,11 @@ export default function EditUserPage() {
         >
           <div className="d-flex">
             <div className="toast-body">{toast.msg}</div>
-            <button type="button" className="btn-close btn-close-white me-2 m-auto" onClick={() => setToast(null)} />
+            <button
+              type="button"
+              className="btn-close btn-close-white me-2 m-auto"
+              onClick={() => setToast(null)}
+            />
           </div>
         </div>
       )}
