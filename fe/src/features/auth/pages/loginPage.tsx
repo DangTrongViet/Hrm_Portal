@@ -1,57 +1,82 @@
-import { useEffect, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import type { User, LoginResp } from '../../../types/api';
-import { postJSON, getJSON } from '../../../lib/http';
-import '../../../../public/css/auth/LoginPage.css'; // giữ nguyên CSS
+import { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { postJSON, getJSON } from "../../../lib/http";
+import "../../../../public/css/auth/LoginPage.css";
 
 interface LoginForm {
   email: string;
   password: string;
 }
 
-export default function LoginPage() {
-  const nav = useNavigate();
-  const location = useLocation();
-  const from = (location.state as any)?.from?.pathname || '/';
+type RawMe =
+  | { user?: any }
+  | { data?: any }
+  | { id?: number; email?: string; full_name?: string; permissionNames?: string[]; permissions?: string[] };
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<LoginForm>({
-    defaultValues: { email: '', password: '' },
+function pickUser(payload: RawMe | any) {
+  if (!payload) return null;
+  const u = (payload as any).user ?? (payload as any).data ?? payload;
+  if (!u || !u.id) return null;
+  return {
+    id: Number(u.id),
+    email: u.email ?? "",
+    full_name: u.full_name ?? u.name ?? "",
+    permissionNames: Array.isArray(u.permissionNames)
+      ? u.permissionNames
+      : Array.isArray(u.permissions)
+      ? u.permissions
+      : [],
+  };
+}
+
+export default function LoginPage() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = (location.state as any)?.from?.pathname || "/";
+
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginForm>({
+    defaultValues: { email: "", password: "" },
   });
 
-  const [err, setErr] = useState<string | null>(null);
-  const [showPwd, setShowPwd] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   // Kiểm tra login dựa vào cookie httpOnly
   useEffect(() => {
     (async () => {
       try {
-        const user = await getJSON<User>('/auth/me');
-        if (user) nav('/me', { replace: true });
+        // ✅ Gọi /me (KHÔNG /api vì BASE đã có /api)
+        const me = await getJSON<RawMe>("/me");
+        const u = pickUser(me);
+        if (u) {
+          localStorage.setItem("currentUser", JSON.stringify(u));
+          // ✅ Điều hướng về trang an toàn để tránh loop guard
+          navigate("/me", { replace: true });
+        }
       } catch {
-        // chưa login → không redirect
+        // Chưa login → không redirect
       }
     })();
-  }, [nav]);
+  }, [navigate]);
 
-  const onSubmit = async (values: LoginForm) => {
-    setErr(null);
+  const onSubmit = async (data: LoginForm) => {
+    setError(null);
     try {
-      // Gửi login → backend set cookie httpOnly
-      await postJSON<LoginResp>('/auth/login', values);
+      // ✅ Gọi /auth/login (KHÔNG /api)
+      const resp = await postJSON<{
+        message: string;
+        user: { id: number; email: string; full_name: string; permissionNames?: string[] };
+      }>("/auth/login", data);
 
-      // Lấy thông tin user
-      const user = await getJSON<User>('/auth/me');
-      if (user) {
-        localStorage.setItem('currentUser', JSON.stringify(user)); // lưu user nếu cần
-        nav(from, { replace: true });
-      }
+      // Lưu user vào localStorage nếu cần
+      localStorage.setItem("currentUser", JSON.stringify(resp.user));
+
+      // ✅ Nếu from là "/", chuyển về "/me" để tránh bị guard chặn gây loop
+      const dest = from !== "/" ? from : "/me";
+      navigate(dest, { replace: true });
     } catch (e: any) {
-      setErr(e?.message || 'Đăng nhập thất bại');
+      setError(e?.message || "Đăng nhập thất bại");
     }
   };
 
@@ -68,7 +93,6 @@ export default function LoginPage() {
             </div>
             <span className="brand-text">HRM Portal</span>
           </div>
-
           <div className="hero-content">
             <h1>
               Quản lý nhân sự <br />
@@ -78,22 +102,15 @@ export default function LoginPage() {
               Theo dõi nhân viên, phòng ban, chấm công và lương thưởng với giao diện hiện đại và trực quan.
             </p>
             <div className="stats-grid">
-              {[
-                { number: '10k+', label: 'Hồ sơ' },
-                { number: '99.9%', label: 'Uptime' },
-                { number: '5 phút', label: 'Triển khai' },
-              ].map((stat, index) => (
-                <div key={index} className="stat-card">
+              {[{ number: "10k+", label: "Hồ sơ" }, { number: "99.9%", label: "Uptime" }, { number: "5 phút", label: "Triển khai" }].map((stat, idx) => (
+                <div key={idx} className="stat-card">
                   <div className="stat-number">{stat.number}</div>
                   <div className="stat-label">{stat.label}</div>
                 </div>
               ))}
             </div>
           </div>
-
-          <div className="copyright">
-            © {new Date().getFullYear()} HRM Inc. All rights reserved.
-          </div>
+          <div className="copyright">© {new Date().getFullYear()} HRM Inc. All rights reserved.</div>
         </div>
 
         {/* Form Section */}
@@ -110,78 +127,52 @@ export default function LoginPage() {
                 <p className="form-subtitle">Truy cập cổng quản lý nhân sự</p>
               </div>
 
-              {err && (
-                <div className="error-alert">
-                  <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
-                  </svg>
-                  <span>{err}</span>
-                </div>
-              )}
+              {error && <div className="error-alert"><span>{error}</span></div>}
 
               <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
                 <div className="form-group">
                   <label className="form-label">Email</label>
-                  <div className="input-wrapper">
-                    <input
-                      {...register('email', { required: 'Vui lòng nhập email' })}
-                      type="email"
-                      className={`form-input ${errors.email ? 'error' : ''}`}
-                      placeholder="you@company.com"
-                    />
-                    {errors.email && (
-                      <div className="error-message">{errors.email.message}</div>
-                    )}
-                  </div>
+                  <input
+                    {...register("email", { required: "Vui lòng nhập email" })}
+                    type="email"
+                    className={`form-input ${errors.email ? "error" : ""}`}
+                    placeholder="you@company.com"
+                  />
+                  {errors.email && <div className="error-message">{errors.email.message}</div>}
                 </div>
 
                 <div className="form-group">
                   <label className="form-label">Mật khẩu</label>
-                  <div className="input-wrapper">
-                    <div className="input-group">
-                      <input
-                        {...register('password', { required: 'Vui lòng nhập mật khẩu' })}
-                        type={showPwd ? 'text' : 'password'}
-                        className={`form-input ${errors.password ? 'error' : ''}`}
-                        placeholder="••••••••"
-                      />
-                      <button
-                        type="button"
-                        className="toggle-password"
-                        onClick={() => setShowPwd(!showPwd)}
-                      >
-                        {showPwd ? 'Ẩn' : 'Hiện'}
-                      </button>
-                    </div>
-                    {errors.password && (
-                      <div className="error-message">{errors.password.message}</div>
-                    )}
+                  <div className="input-group">
+                    <input
+                      {...register("password", { required: "Vui lòng nhập mật khẩu" })}
+                      type={showPassword ? "text" : "password"}
+                      className={`form-input ${errors.password ? "error" : ""}`}
+                      placeholder="••••••••"
+                    />
+                    <button type="button" className="toggle-password" onClick={() => setShowPassword(!showPassword)}>
+                      {showPassword ? "Ẩn" : "Hiện"}
+                    </button>
                   </div>
+                  {errors.password && <div className="error-message">{errors.password.message}</div>}
                 </div>
 
                 <div className="form-options">
                   <div className="checkbox-wrapper">
                     <input type="checkbox" id="remember" className="checkbox" />
-                    <label htmlFor="remember" className="checkbox-label">
-                      Ghi nhớ đăng nhập
-                    </label>
+                    <label htmlFor="remember" className="checkbox-label">Ghi nhớ đăng nhập</label>
                   </div>
-                  <Link to="/forgot-password" className="forgot-link">
-                    Quên mật khẩu?
-                  </Link>
+                  <Link to="/forgot-password" className="forgot-link">Quên mật khẩu?</Link>
                 </div>
 
                 <button type="submit" className="submit-button" disabled={isSubmitting}>
-                  {isSubmitting && <div className="loading-spinner"></div>}
-                  {isSubmitting ? 'Đang đăng nhập...' : 'Đăng nhập'}
+                  {isSubmitting ? "Đang đăng nhập..." : "Đăng nhập"}
                 </button>
               </form>
             </div>
 
             <div className="footer">
-              <p className="copyright">
-                © {new Date().getFullYear()} HRM Inc. All rights reserved.
-              </p>
+              <p className="copyright">© {new Date().getFullYear()} HRM Inc. All rights reserved.</p>
             </div>
           </div>
         </div>
