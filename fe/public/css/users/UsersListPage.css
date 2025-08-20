@@ -334,3 +334,11 @@
 .user .dropdown-menu {
   z-index: 2000; /* đủ cao so với các shadow/overlay khác */
 }
+
+
+.user .users-card,
+.user .hrm-table,
+.user .table-responsive { overflow: visible; }
+
+.user .table-actions { position: relative; }
+.user .dropdown-menu { position: absolute; z-index: 2000; }
