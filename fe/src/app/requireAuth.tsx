@@ -18,7 +18,6 @@ function pickUser(payload: RawMe | any): AppUser | null {
   if (!payload) return null;
   const u = (payload as any).user ?? (payload as any).data ?? payload;
   if (!u || typeof u !== "object" || !u.id) return null;
-
   return {
     id: Number(u.id),
     email: u.email ?? "",
@@ -40,7 +39,7 @@ export default function RequireAuth() {
   useEffect(() => {
     mounted.current = true;
 
-    // 1) Tin localStorage trước để render nhanh
+    // 1) Tin localStorage để render nhanh
     try {
       const raw = localStorage.getItem("currentUser");
       if (raw) {
@@ -49,13 +48,12 @@ export default function RequireAuth() {
       }
     } catch {}
 
-    // 2) Revalidate bằng /me ở nền (BASE đã có /api, nên chỉ gọi "/me")
+    // 2) Revalidate bằng /me (BASE đã có /api)
     (async () => {
       try {
         const me = await getJSON<RawMe>("/me");
         const u = pickUser(me);
         if (!mounted.current) return;
-
         if (u) {
           localStorage.setItem("currentUser", JSON.stringify(u));
           setUser(u);
@@ -72,15 +70,10 @@ export default function RequireAuth() {
       }
     })();
 
-    return () => {
-      mounted.current = false;
-    };
+    return () => { mounted.current = false; };
   }, []);
 
-  // Chưa có user và còn đang xác thực lần đầu → hiển thị nhẹ
   if (!user && validating) return <div>Đang kiểm tra đăng nhập...</div>;
-  // Không có user → đưa về login
   if (!user) return <Navigate to="/login" replace state={{ from: loc }} />;
-
   return <Outlet />;
 }
