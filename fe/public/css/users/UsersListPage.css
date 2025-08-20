@@ -1,3 +1,4 @@
+
 .user .container {
   max-width: 1400px;
   margin: 0 auto;
@@ -301,3 +302,10 @@
 .user .verify-cell:focus {
   outline: 2px dashed #79b; outline-offset: 2px; /* hỗ trợ keyboard */
 }
+
+
+/* dropdown trong bảng phải nổi trên các phần tử khác */
+.user .dropdown-menu { z-index: 2000; }
+
+/* đề phòng bị ancestor nào đó che */
+.user .table-actions { position: relative; }
