@@ -334,7 +334,7 @@ export default function UsersListPage() {
 
           <div className="table-responsive shadow-sm rounded-3 hrm-table">
             <table className="table table-hover align-middle mb-0">
-              {/* Cách B: 6 cột đầu đều nhau + cột Hành động 140px */}
+              {/* 6 cột đầu đều nhau + cột Hành động 140px */}
               <colgroup>
                 <col style={{ width: 'calc((100% - 140px) / 6)' }} />
                 <col style={{ width: 'calc((100% - 140px) / 6)' }} />
@@ -429,13 +429,28 @@ export default function UsersListPage() {
                         </span>
                       </td>
 
-                      <td className="px-4 py-3 text-center">
-                        {u.isVerified ? (
-                          <svg className="text-success" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                      {/* Ô Xác minh: click để toggle */}
+                      <td
+                        className="px-4 py-3 text-center verify-cell"
+                        role="button"
+                        tabIndex={0}
+                        title={u.isVerified ? 'Bấm để bỏ xác minh' : 'Bấm để xác minh'}
+                        onClick={() => actingId !== u.id && toggleVerified(u)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            if (actingId !== u.id) toggleVerified(u);
+                          }
+                        }}
+                      >
+                        {actingId === u.id ? (
+                          <span className="spinner-border spinner-border-sm" aria-label="Đang cập nhật" />
+                        ) : u.isVerified ? (
+                          <svg className="text-success" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-label="Đã xác minh">
                             <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z" />
                           </svg>
                         ) : (
-                          <svg className="text-danger" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                          <svg className="text-danger" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-label="Chưa xác minh">
                             <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z" />
                           </svg>
                         )}
@@ -449,36 +464,27 @@ export default function UsersListPage() {
                         <small className="text-muted">{new Date(u.createdAt).toLocaleString()}</small>
                       </td>
 
-                      <td className="px-4 py-3 text-end table-actions">
+                      <td className="px-4 py-3 text-end table-actions position-static">
                         <div className="btn-group">
-                          {/* Nút nhanh: xác minh/bỏ xác minh */}
-                          <button
-                            className="btn btn-sm btn-outline-success"
-                            disabled={actingId === u.id}
-                            onClick={() => toggleVerified(u)}
-                            title={u.isVerified ? 'Bỏ xác minh' : 'Xác minh'}
-                          >
-                            {actingId === u.id ? '...' : u.isVerified ? 'Bỏ xác minh' : 'Xác minh'}
-                          </button>
-
                           {/* Dropdown các hành động khác */}
                           <button
                             type="button"
-                            className="btn btn-sm btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+                            className="btn btn-sm btn-outline-secondary dropdown-toggle"
                             data-bs-toggle="dropdown"
+                            data-bs-display="static"
                             aria-expanded="false"
                           >
-                            <span className="visually-hidden">Toggle Dropdown</span>
+                            Hành động
                           </button>
                           <ul className="dropdown-menu dropdown-menu-end">
                             <li>
                               <Link className="dropdown-item" to={`/users/${u.id}`}>
-                                Xem chi tiết
+                                Xem 
                               </Link>
                             </li>
                             <li>
                               <Link className="dropdown-item" to={`/users/${u.id}/edit`}>
-                                Sửa thông tin
+                                Sửa 
                               </Link>
                             </li>
                             <li><hr className="dropdown-divider" /></li>

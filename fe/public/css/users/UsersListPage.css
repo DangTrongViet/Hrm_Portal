@@ -288,3 +288,16 @@
 .user .table-actions {
   position: relative;           /* cho an toàn */
 }
+
+
+/* Cho ô xác minh cảm giác có thể click */
+.user .verify-cell {
+  cursor: pointer;
+  transition: transform 0.05s ease, opacity 0.15s ease;
+}
+.user .verify-cell:active {
+  transform: scale(0.98);
+}
+.user .verify-cell:focus {
+  outline: 2px dashed #79b; outline-offset: 2px; /* hỗ trợ keyboard */
+}
