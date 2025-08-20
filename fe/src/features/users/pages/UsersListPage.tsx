@@ -38,6 +38,10 @@ type SortDir = 'asc' | 'desc';
 export default function UsersListPage() {
   const nav = useNavigate();
   const [sp, setSp] = useSearchParams();
+  const stop = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
 
   const [rows, setRows] = useState<UserRow[]>([]);
   const [pagination, setPagination] = useState({
@@ -680,10 +684,18 @@ export default function UsersListPage() {
                             data-bs-auto-close="outside"
                             data-bs-boundary="viewport"
                             aria-expanded="false"
+                            onClick={stop}
+                            onMouseDown={stop}
+                            onTouchStart={stop}
                           >
                             Hành động
                           </button>
-                          <ul className="dropdown-menu dropdown-menu-end shadow">
+                          <ul
+                            className="dropdown-menu dropdown-menu-end shadow"
+                            onClick={stop}
+                            onMouseDown={stop}
+                            onTouchStart={stop}
+                          >
                             <li>
                               <Link
                                 className="dropdown-item"
