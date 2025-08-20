@@ -42,37 +42,33 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
 
-  // Kiểm tra login dựa vào cookie httpOnly
+  // Nếu đã có phiên (cookie httpOnly), tự động vào app
   useEffect(() => {
     (async () => {
       try {
-        // ✅ Gọi /me (KHÔNG /api vì BASE đã có /api)
-        const me = await getJSON<RawMe>("/me");
+        const me = await getJSON<RawMe>("/me"); // KHÔNG /api vì BASE đã có /api
         const u = pickUser(me);
         if (u) {
           localStorage.setItem("currentUser", JSON.stringify(u));
-          // ✅ Điều hướng về trang an toàn để tránh loop guard
-          navigate("/me", { replace: true });
+          if (location.pathname !== "/me") navigate("/me", { replace: true });
         }
       } catch {
-        // Chưa login → không redirect
+        // chưa đăng nhập → đứng yên tại trang login
       }
     })();
-  }, [navigate]);
+  }, [navigate, location.pathname]);
 
   const onSubmit = async (data: LoginForm) => {
     setError(null);
     try {
-      // ✅ Gọi /auth/login (KHÔNG /api)
       const resp = await postJSON<{
         message: string;
         user: { id: number; email: string; full_name: string; permissionNames?: string[] };
-      }>("/auth/login", data);
+      }>("/auth/login", data); // KHÔNG /api
 
-      // Lưu user vào localStorage nếu cần
       localStorage.setItem("currentUser", JSON.stringify(resp.user));
 
-      // ✅ Nếu from là "/", chuyển về "/me" để tránh bị guard chặn gây loop
+      // Nếu from === "/" dễ bị guard, chuyển về /me an toàn
       const dest = from !== "/" ? from : "/me";
       navigate(dest, { replace: true });
     } catch (e: any) {

@@ -1,6 +1,5 @@
-// src/routes/requireAuth.tsx
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getJSON } from "../lib/http";
 
 type RawMe =
@@ -15,7 +14,6 @@ type AppUser = {
   permissionNames: string[];
 };
 
-// rút user từ nhiều kiểu payload khác nhau
 function pickUser(payload: RawMe | any): AppUser | null {
   if (!payload) return null;
   const u = (payload as any).user ?? (payload as any).data ?? payload;
@@ -36,29 +34,53 @@ function pickUser(payload: RawMe | any): AppUser | null {
 export default function RequireAuth() {
   const loc = useLocation();
   const [user, setUser] = useState<AppUser | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [validating, setValidating] = useState(true);
+  const mounted = useRef(true);
 
   useEffect(() => {
+    mounted.current = true;
+
+    // 1) Tin localStorage trước để render nhanh
+    try {
+      const raw = localStorage.getItem("currentUser");
+      if (raw) {
+        const u = JSON.parse(raw) as AppUser;
+        if (u?.id) setUser(u);
+      }
+    } catch {}
+
+    // 2) Revalidate bằng /me ở nền (BASE đã có /api, nên chỉ gọi "/me")
     (async () => {
       try {
-        // ✅ gọi đúng /api/me (đã có authMiddleware)
         const me = await getJSON<RawMe>("/me");
         const u = pickUser(me);
+        if (!mounted.current) return;
+
         if (u) {
           localStorage.setItem("currentUser", JSON.stringify(u));
           setUser(u);
         } else {
+          localStorage.removeItem("currentUser");
           setUser(null);
         }
       } catch {
+        if (!mounted.current) return;
+        localStorage.removeItem("currentUser");
         setUser(null);
       } finally {
-        setLoading(false);
+        if (mounted.current) setValidating(false);
       }
     })();
+
+    return () => {
+      mounted.current = false;
+    };
   }, []);
 
-  if (loading) return <div>Đang kiểm tra đăng nhập...</div>;
+  // Chưa có user và còn đang xác thực lần đầu → hiển thị nhẹ
+  if (!user && validating) return <div>Đang kiểm tra đăng nhập...</div>;
+  // Không có user → đưa về login
   if (!user) return <Navigate to="/login" replace state={{ from: loc }} />;
+
   return <Outlet />;
 }
