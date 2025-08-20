@@ -413,3 +413,57 @@
 /* Đảm bảo text không đẩy vỡ layout */
 .user .table { table-layout: fixed; width: 100%; }
 .user .table thead th, .user .table tbody td { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
+
+/* --- Dropdown trong bảng: chỉ nới đúng cột Hành động --- */
+.user td.table-actions {
+  overflow: visible !important;           /* không cắt dropdown */
+  position: relative;                     /* mốc cho z-index khi cần */
+}
+
+/* Dropdown luôn nổi cao hơn mọi thành phần khác (kể cả pagination) */
+.user .dropdown-menu {
+  z-index: 5000 !important;
+}
+
+/* Khi 1 dropdown đang mở, cả row đó nổi lên trên cùng và không bị cắt */
+.user table tr:has(.dropdown-menu.show) {
+  position: relative;
+  z-index: 5001;                          /* cao hơn .dropdown-menu để giữ stacking cùng lớp */
+}
+.user table tr:has(.dropdown-menu.show) > td {
+  overflow: visible !important;           /* bỏ ellipsis-clip cho row đang mở */
+}
+
+/* Tránh “ghost click”: khi menu mở, vô hiệu các cell có onClick trong cùng hàng */
+.user table tr:has(.dropdown-menu.show) .verify-cell,
+.user table tr:has(.dropdown-menu.show) .copy-btn {
+  pointer-events: none;                   /* di chuột qua không kích hoạt toggle/ copy */
+}
+
+/* Đề phòng ancestor nào đó cắt – đảm bảo chuỗi container đều cho tràn dọc */
+.user .users-card,
+.user .hrm-table,
+.user .table-responsive {
+  overflow: visible;
+}
+
+/* Giữ ellipsis cho các cell khác, nhưng KHÔNG áp cho cột Hành động */
+.user .table tbody td {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 0;
+}
+.user .table tbody td.table-actions {
+  overflow: visible !important;
+  max-width: none;                        /* để menu thoải mái */
+}
+
+/* Nếu pagination vẫn nằm trên, cho nó z thấp hơn */
+.user .pill-pagination { z-index: 1; }
+
+/* Tùy chọn: đẩy menu tách nút 1 chút cho dễ bấm (không bắt buộc) */
+.user .table-actions .dropdown-menu {
+  margin-top: .25rem;
+}
